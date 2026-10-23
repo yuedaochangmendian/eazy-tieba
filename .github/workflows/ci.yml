@@ -38,6 +38,10 @@ jobs:
         continue-on-error: true
         run: bun run lint
 
+      - name: Build SDK
+        # web 的类型检查会顺着 @tieba/api 进入 apps/api，后者依赖 tieba.js 的 dist/types
+        run: bun run --cwd packages/sdk build
+
       - name: Typecheck (web)
         run: bun run --cwd apps/web typecheck
 

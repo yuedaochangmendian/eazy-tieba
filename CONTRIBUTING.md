@@ -32,7 +32,8 @@ chore(ci): 升级 setup-bun 到 v2
 
 ```bash
 bun install
-bun run lint          # Biome
+bun run --cwd packages/sdk build   # web 类型检查需要 tieba.js 的 dist/types
+bun run lint                       # Biome
 bun run --cwd apps/web typecheck
 bun run --cwd apps/web build
 ```
