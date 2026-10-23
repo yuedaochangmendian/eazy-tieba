@@ -8,7 +8,7 @@
  * 未开启代理时前端不会请求 /api，此文件等价于纯静态托管。
  */
 
-const UPSTREAM = "https://zwrcjbwbskoa.sealosbja.site";
+const UPSTREAM = "https://eazy-tieba-api.ljlggzxxlfl.workers.dev";
 const PREFIX = "/api";
 
 export default {

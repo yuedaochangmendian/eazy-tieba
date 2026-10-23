@@ -151,6 +151,15 @@ CI（`.github/workflows/ci.yml`）在每次推送到 `v3` 或提交 PR 时执行
 
 ## 部署
 
+线上环境（本 fork 自建）：
+
+| 服务 | 地址 | 说明 |
+| --- | --- | --- |
+| 站点 | https://eazy-tieba.pages.dev | Cloudflare Pages，push `v3` 自动部署 |
+| API | https://eazy-tieba-api.ljlggzxxlfl.workers.dev | Cloudflare Workers，push 改动 `apps/api/**` 自动部署 |
+
+前端通过 `apps/web/public/_worker.js` 把 `/api/*` 同源转发到上面的 API（上游接口的 CORS 白名单不含 `pages.dev`，直连会被浏览器拦掉）。Worker 需要 `BDUSS` Secret；数据库相关接口（db-analyze、导出通知）还需要 `DATABASE_URL`，未配置时这部分会返回明确错误。
+
 - **上游**：推送到 `v3` 后由 `.github/workflows/web-cf-pages.yml` 自动部署到 Cloudflare Pages。
 - **本 fork**：默认跳过部署，避免误用他人或自己的 Cloudflare 凭据。若要在自己的账号下部署，在仓库 Variables 中设置 `ENABLE_CLOUDFLARE_DEPLOY=true`，并配置：
   - Secrets：`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`，可选 `VITE_SENTRY_DSN`
