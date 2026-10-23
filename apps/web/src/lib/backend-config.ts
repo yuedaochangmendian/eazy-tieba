@@ -4,6 +4,14 @@ export const BACKEND_ENDPOINTS = {
 	foreign: "https://cf.eztb.org",
 } as const;
 
+/**
+ * 同源代理基址：构建时设置 VITE_API_PROXY=true，前端就只请求本站 /api/*，
+ * 由部署平台的边缘函数转发到上游接口，避免跨域限制。
+ */
+export const API_PROXY_BASE: string | null = import.meta.env.VITE_API_PROXY
+	? `${window.location.origin}/api`
+	: null;
+
 export const PRODUCTION_BACKEND = "domestic";
 export const BACKUP_BACKEND = "foreign";
 

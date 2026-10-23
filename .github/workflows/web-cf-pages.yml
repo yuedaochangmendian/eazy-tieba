@@ -39,6 +39,8 @@ jobs:
         env:
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
           VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
+          # 自建 Pages 时打开同源代理（上游接口的 CORS 白名单不含 pages.dev）
+          VITE_API_PROXY: ${{ vars.VITE_API_PROXY }}
         run: bun run --cwd apps/web build
 
       - name: Deploy to Cloudflare Pages

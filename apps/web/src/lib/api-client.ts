@@ -18,6 +18,10 @@ function remapUrl(input: RequestInfo | URL, targetBase: string): string {
 	const target = new URL(targetBase);
 	original.protocol = target.protocol;
 	original.host = target.host;
+	const prefix = target.pathname.replace(/\/+$/, "");
+	if (prefix && prefix !== "/") {
+		original.pathname = `${prefix}${original.pathname}`;
+	}
 	return original.toString();
 }
 
