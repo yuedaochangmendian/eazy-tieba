@@ -34,7 +34,7 @@
 eazy-tieba
 ├─ apps/
 │  ├─ web/        # 前端应用（React + Vite + TanStack）
-│  ├─ api/        # API 服务（Hono + Effect）[submodule]
+│  ├─ api/        # API 服务（Hono + Effect）[submodule → 本 fork 维护]
 │  └─ mail/       # 导出/邮件 Cloudflare Worker
 ├─ packages/
 │  └─ sdk/        # tieba.js SDK [submodule]

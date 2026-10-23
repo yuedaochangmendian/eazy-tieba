@@ -48,7 +48,12 @@ CI（`.github/workflows/ci.yml`）会对 PR 重复这些检查，本地先过一
 
 ## 子模块
 
-`apps/api`、`packages/sdk` 是独立仓库的子模块，改动请提交到对应上游仓库，本仓库只更新指针：
+`apps/api`、`packages/sdk` 是独立仓库的子模块，本仓库只保存指针。
+
+- `packages/sdk` 跟随上游 `Dilettante258/tieba.js`。
+- `apps/api` 跟随本 fork 的 `yuedaochangmendian/Tieba-API-SCF`（因为需要在 API 侧改导出上限等行为）。修改前先在 API 仓库提交并推送，再回到主仓库更新指针。
+
+改动请提交到对应仓库：
 
 ```bash
 cd apps/api && git switch -c fix/xxx && ... && git push
