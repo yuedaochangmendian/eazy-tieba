@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [v3]
+  pull_request:
+    branches: [v3]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint / Typecheck / Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.11
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # 存量代码仍有 Biome 告警（见 issue #2），先以提示形式运行；新增代码请保持零告警。
+      - name: Lint (Biome, advisory)
+        continue-on-error: true
+        run: bun run lint
+
+      - name: Build SDK
+        # web 的类型检查会顺着 @tieba/api 进入 apps/api，后者依赖 tieba.js 的 dist/types
+        run: bun run --cwd packages/sdk build
+
+      - name: Typecheck (web)
+        run: bun run --cwd apps/web typecheck
+
+      - name: Build (web)
+        env:
+          VITE_SITE_URL: https://www.eztb.org
+        run: bun run --cwd apps/web build

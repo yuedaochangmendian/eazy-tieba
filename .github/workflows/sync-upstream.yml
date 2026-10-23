@@ -1,0 +1,29 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    # 03:30 Asia/Shanghai
+    - cron: "30 19 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Merge Dilettante258/eazy-tieba@v3
+    if: github.repository == 'yuedaochangmendian/eazy-tieba'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Sync fork with upstream
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh repo sync "${{ github.repository }}" \
+            --source Dilettante258/eazy-tieba \
+            --branch v3
