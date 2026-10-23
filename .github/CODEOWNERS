@@ -1,0 +1,15 @@
+# 代码所有权
+
+默认由维护者负责全部路径；治理相关文件额外标注，便于 review 时定位。
+
+*       @yuedaochangmendian
+
+/.github/            @yuedaochangmendian
+/README.md           @yuedaochangmendian
+/CONTRIBUTING.md     @yuedaochangmendian
+/SECURITY.md         @yuedaochangmendian
+/NOTICE              @yuedaochangmendian
+
+# 子模块与上游保持同步，改动以子模块仓库的 review 为准
+/apps/api/           @yuedaochangmendian
+/packages/sdk/       @yuedaochangmendian
