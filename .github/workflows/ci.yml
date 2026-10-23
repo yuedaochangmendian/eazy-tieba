@@ -49,3 +49,12 @@ jobs:
         env:
           VITE_SITE_URL: https://www.eztb.org
         run: bun run --cwd apps/web build
+
+      # 手动触发时把构建产物带出来，方便本地预览或排查线上问题
+      - name: Upload web dist
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: apps/web/dist
+          retention-days: 3
