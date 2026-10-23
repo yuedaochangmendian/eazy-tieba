@@ -1,4 +1,5 @@
 import {
+	API_PROXY_BASE,
 	BACKEND_ENDPOINTS,
 	BACKUP_BACKEND,
 	PRODUCTION_BACKEND,
@@ -129,11 +130,13 @@ export async function ensureBackendReady(force = false): Promise<BackendNode> {
 }
 
 export function getApiBaseUrl(): string {
+	if (API_PROXY_BASE) return API_PROXY_BASE;
 	const node = useSettingsStore.getState().activeBackend;
 	return BACKEND_ENDPOINTS[node];
 }
 
 export async function resolveApiBaseUrl(): Promise<string> {
+	if (API_PROXY_BASE) return API_PROXY_BASE;
 	const node = await ensureBackendReady();
 	return BACKEND_ENDPOINTS[node];
 }
