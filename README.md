@@ -172,7 +172,8 @@ CI（`.github/workflows/ci.yml`）在每次推送到 `v3` 或提交 PR 时执行
 
 - 上游主仓库：https://github.com/Dilettante258/eazy-tieba
 - 站点：https://www.eztb.org
-- API 仓库：https://github.com/Dilettante258/Tieba-API-SCF
+- API 仓库（本 fork 维护）：https://github.com/yuedaochangmendian/Tieba-API-SCF
+- API 上游：https://github.com/Dilettante258/Tieba-API-SCF
 - SDK 仓库：https://github.com/Dilettante258/tieba.js
 - SDK 文档：http://sdk.eztb.org/
 

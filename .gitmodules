@@ -4,5 +4,5 @@
 	branch = v3
 [submodule "apps/api"]
 	path = apps/api
-	url = https://github.com/Dilettante258/Tieba-API-SCF.git
+	url = https://github.com/yuedaochangmendian/Tieba-API-SCF.git
 	branch = v3

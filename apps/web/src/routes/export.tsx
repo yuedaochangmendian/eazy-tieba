@@ -146,7 +146,7 @@ const DATA_TYPE_GUIDE: Record<
 		title: "贴吧帖子导出",
 		summary: "按吧名批量导出帖子列表，支持深度抓取。",
 		points: [
-			"输入吧名和扫描帖子数（最多 300）",
+			"输入吧名和扫描帖子数，数量不限，按需设置",
 			"深度选择“全部”时会逐帖抓取内容并推送进度",
 			"建议先用较小帖子数测试参数",
 		],
@@ -768,12 +768,12 @@ function ExportPage() {
 		if (dataType === "forumThreads") {
 			task.fname = fname.trim();
 			task.sort = sort;
-			task.count = Math.min(Math.max(Number(count) || 50, 1), 300);
+			task.count = Math.max(Math.floor(Number(count)) || 50, 1);
 			task.depth = depth;
 			task.withComments = depth === "all" ? forumWithComments : false;
 			task.maxPages =
 				depth === "all"
-					? Math.min(Math.max(Number(forumMaxPages) || 5, 1), 20)
+					? Math.max(Math.floor(Number(forumMaxPages)) || 5, 1)
 					: undefined;
 			task.sourceLabel = task.fname;
 			task.total = depth === "all" ? task.count : 1;
@@ -923,6 +923,12 @@ function ExportPage() {
 								maxPages: String(pending.maxPages ?? 5),
 							},
 							(payload) => {
+								if (payload.type === "page") {
+									updateTask(taskId, {
+										current: Number(payload.page ?? 0),
+										total: Number(payload.total ?? 1),
+									});
+								}
 								if (payload.type === "threads") {
 									const total = Number(payload.count ?? 0);
 									updateTask(taskId, {
@@ -1118,12 +1124,13 @@ function ExportPage() {
 											<TextInput
 												type="number"
 												min={1}
-												max={300}
 												value={count}
 												onChange={(e) => setCount(e.target.value)}
 												className={styles.exportPageInput}
 											/>
-											<FormControl.Caption>范围 1-300</FormControl.Caption>
+											<FormControl.Caption>
+												正整数，默认 50，不设上限
+											</FormControl.Caption>
 										</FormControl>
 									</div>
 									<div className={styles.exportCheckboxRow}>
@@ -1180,13 +1187,12 @@ function ExportPage() {
 													<TextInput
 														type="number"
 														min={1}
-														max={20}
 														value={forumMaxPages}
 														onChange={(e) => setForumMaxPages(e.target.value)}
 														className={styles.exportPageInput}
 													/>
 													<FormControl.Caption>
-														范围 1-20，默认 5
+														正整数，默认 5，不设上限
 													</FormControl.Caption>
 												</FormControl>
 											</div>
