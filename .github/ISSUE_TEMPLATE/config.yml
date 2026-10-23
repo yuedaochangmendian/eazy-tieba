@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全漏洞（私密报告）
+    url: https://github.com/yuedaochangmendian/eazy-tieba/security/advisories/new
+    about: 请勿在公开 Issue 中披露未修复的安全问题
+  - name: 上游项目
+    url: https://github.com/Dilettante258/eazy-tieba/issues
+    about: 与本 fork 无关、影响上游的问题可以反馈给原作者
+  - name: 使用文档
+    url: https://www.eztb.org
+    about: 站点与 SDK 文档
