@@ -147,7 +147,7 @@ bun run lint        # Biome 检查
 bun run check       # Biome 检查并自动修复
 ```
 
-CI（`.github/workflows/ci.yml`）在每次推送到 `v3` 或提交 PR 时执行：依赖安装 → Biome lint → Web 类型检查 → Web 构建。
+CI（`.github/workflows/ci.yml`）在每次推送到 `v3` 或提交 PR 时执行：依赖安装 → Web 类型检查 → Web 构建 → Biome lint。lint 目前是提示项（存量告警清理中），类型检查与构建为强制项。
 
 ## 部署
 

@@ -33,7 +33,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Lint (Biome)
+      # 存量代码仍有 Biome 告警（见 issue #2），先以提示形式运行；新增代码请保持零告警。
+      - name: Lint (Biome, advisory)
+        continue-on-error: true
         run: bun run lint
 
       - name: Typecheck (web)

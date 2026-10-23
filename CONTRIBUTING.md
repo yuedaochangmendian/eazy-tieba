@@ -37,7 +37,13 @@ bun run --cwd apps/web typecheck
 bun run --cwd apps/web build
 ```
 
-CI（`.github/workflows/ci.yml`）会对 PR 重复这些检查，本地先过一遍可以省时间。
+CI（`.github/workflows/ci.yml`）会对 PR 重复这些检查，本地先过一遍可以省时间。其中 lint 目前是提示项（存量告警见 issue #2），类型检查与构建是强制项。
+
+> 不要对整仓执行 `bun run check`（会 reformat 全部文件，和上游产生大量冲突）。只格式化本次改动的文件：
+>
+> ```bash
+> bunx biome check --write apps/web/src/<改动路径>
+> ```
 
 ## 子模块
 
