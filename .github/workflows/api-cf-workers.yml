@@ -1,0 +1,78 @@
+name: API Deploy (Cloudflare Workers)
+
+on:
+  push:
+    branches: [v3]
+    paths:
+      - "apps/api/**"
+      - ".github/workflows/api-cf-workers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # secrets 不能直接用在 if 条件里，先提升到 env 再判断
+  BDUSS_VALUE: ${{ secrets.BDUSS }}
+
+concurrency:
+  group: api-cf-workers-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build & deploy API worker
+    # 上游仓库不部署我们这套；fork 上通过 ENABLE_CLOUDFLARE_DEPLOY 显式开启
+    if: >-
+      github.repository == 'yuedaochangmendian/eazy-tieba' ||
+      vars.ENABLE_CLOUDFLARE_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.11
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build SDK
+        run: bun run --cwd packages/sdk build
+
+      - name: Build worker bundle
+        run: bun run --cwd apps/api build:worker
+
+      # 用临时配置发布，避免改动 apps/api 子模块里上游的 wrangler.jsonc（那个绑了 cf.eztb.org）
+      - name: Write deploy config
+        working-directory: apps/api
+        run: |
+          cat > wrangler.deploy.toml <<'TOML'
+          name = "eazy-tieba-api"
+          main = "out-worker/worker.js"
+          compatibility_date = "2026-02-20"
+          compatibility_flags = ["nodejs_compat"]
+          workers_dev = true
+          TOML
+
+      - name: Deploy worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/api
+          command: deploy --config wrangler.deploy.toml --no-bundle
+
+      - name: Set BDUSS secret
+        if: env.BDUSS_VALUE != ''
+        working-directory: apps/api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BDUSS: ${{ secrets.BDUSS }}
+        run: echo "$BDUSS" | npx --yes wrangler@4 secret put BDUSS --config wrangler.deploy.toml
